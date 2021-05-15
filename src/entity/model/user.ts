@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Chat } from "./chat";
 import { EntityWithIdColumn } from "./EntityWithPrimaryColumn";
+import { Reservation } from "./reservation";
 import { Room } from "./room";
 
 @Entity("user_tbl")
@@ -19,4 +20,7 @@ export class User extends EntityWithIdColumn{
 
     @OneToMany(() => Chat, chat => chat.user_id)
     chats: Chat[];
+
+    @OneToMany(() => Reservation, reservation => reservation.user_id)
+    reservations: Reservation[];
 }
