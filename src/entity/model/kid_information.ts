@@ -17,15 +17,15 @@ export class kidInformation {
     @Column({ type: "varchar", length: 45 })
     vaccination: string;
 
-    @Column({ type: "varchar", length: 45 })
+    @Column({ type: "varchar", length: 45, nullable: true})
     fetus_name: string;
 
-    @Column({ type: "varchar", length: 200 })
+    @Column({ type: "varchar", length: 200, nullable: true })
     request: string;
 
-    @Column({ type: "varchar", length: 200 })
+    @Column({ type: "varchar", length: 200, nullable: true })
     caution: string;
 
-    @Column({ type: "varchar", length: 300 })
+    @Column({ type: "varchar", length: 300, nullable: true })
     give_later: string;
 }
