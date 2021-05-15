@@ -5,13 +5,11 @@ import { User } from "./user";
 
 @Entity("room_tbl")
 export class Room extends EntityWithIdColumn {
-    @PrimaryColumn()
-    @ManyToOne(() => Admin, admin => admin.code)
     @JoinColumn({ name: "admin_code"})
+    @ManyToOne(() => Admin, admin => admin.rooms)
     admin_code: Admin;
 
-    @PrimaryColumn()
+    @JoinColumn({ name: "user_id" })
     @OneToOne(() => User, user => user.id)
-    @JoinColumn({ name: "user_id"})
     user_id: User;
 }
