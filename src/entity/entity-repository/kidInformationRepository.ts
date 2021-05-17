@@ -8,9 +8,20 @@ export class KidInformationRepository extends Repository<kidInformation> {
         return getCustomRepository(KidInformationRepository);
     }
 
-    public async getInformation(reservation_id: number): Promise<kidInformation> {
-        return this.createQueryBuilder()
-            .where("kidInformation.reservation_id = :id", { id: reservation_id})
-            .getOne()
+    public async createInformation(kidInformation: kidInformation): Promise<void> {
+        await this.createQueryBuilder()
+            .insert()
+            .values([
+                {
+                    birth_date: kidInformation.birth_date,
+                    kid_name: kidInformation.kid_name,
+                    vaccination: kidInformation.vaccination,
+                    fetus_name: kidInformation.fetus_name,
+                    request: kidInformation.request,
+                    caution: kidInformation.caution,
+                    give_later: kidInformation.give_later
+                }
+            ])
+            .execute()
     }
 }
