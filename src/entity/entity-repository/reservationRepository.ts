@@ -5,8 +5,21 @@ import { Reservation } from "../model/reservation";
 export class ReservationRepository extends Repository<Reservation> {
 
     static getQueryRepository() {
-        return getCustomRepositorty(ReservationRepository)
+        return getCustomRepository(ReservationRepository)
     }
 
-    public async makeReservation()
+    public async makeReservation(reservation: Reservation): Promise<void> {
+        await this.createQueryBuilder("reservation")
+            .insert()
+            .values([
+                {
+                    time: reservation.time,
+                    reservation: true,
+                    user_id: reservation.user_id
+                }
+            ])
+            .execute()
+    }
+
+    
 }
