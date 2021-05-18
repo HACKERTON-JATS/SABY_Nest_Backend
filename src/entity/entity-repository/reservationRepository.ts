@@ -20,6 +20,4 @@ export class ReservationRepository extends Repository<Reservation> {
             ])
             .execute()
     }
-
-    
 }
