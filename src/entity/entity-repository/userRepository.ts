@@ -8,5 +8,9 @@ export class UserRepository extends Repository<User> {
         return getCustomRepository(UserRepository)
     }
 
-    public async createUser(user:)
+    public async createUser(user: User): Promise<User> {
+        const newUser: User = new User();
+        newUser.nickname = user.nickname;
+        return this.manager.save(newUser);
+    }
 }
