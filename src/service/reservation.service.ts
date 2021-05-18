@@ -1,6 +1,6 @@
 import { KidInformationRepository } from "src/entity/entity-repository/kidInformationRepository";
 import { ReservationRepository } from "src/entity/entity-repository/reservationRepository";
-import { kidInformation } from "src/entity/model";
+import { kidInformation, Reservation } from "src/entity/model";
 
 export class ReservationService {
     constructor(
@@ -8,7 +8,8 @@ export class ReservationService {
         private kidInformationRepository: KidInformationRepository
     ) {}
 
-    public async makeReservation(): Promise<> {
-        await 
+    public async makeReservation(kidInformation: kidInformation, reservation: Reservation): Promise<void> {
+        await this.kidInformationRepository.createInformation(kidInformation);
+        await this.reservationRepository.makeReservation(reservation);
     }
 }   
