@@ -13,10 +13,4 @@ export class UserRepository extends Repository<User> {
         newUser.nickname = user.nickname;
         return this.manager.save(newUser);
     }
-
-    public async selectEmail(): Promise<string[]> {
-        return this.createQueryBuilder("user")
-            .select("user.email", "email")
-            .getRawMany()
-    }
 }
