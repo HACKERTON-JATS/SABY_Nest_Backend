@@ -6,10 +6,11 @@ import { UserRepository } from "../entity/entity-repository/userRepository";
 
 export class UserService {
     constructor(
-        private userRepository: UserRepository
+        private userRepository: UserRepository,
     ) { }
     
     private client = redis.createClient(6379, "127.0.0.1");
+    private verifyCode: string;
 
     public async checkEmail(email: string): Promise<boolean> {
         const checkEmail: User = await this.userRepository.findOne({
@@ -20,14 +21,16 @@ export class UserService {
     }
 
     public async checkCode(code: string): Promise<boolean> {
-        const checkCode: string = this.client.get("verifyCode", function (err, data) {
-            console.log(data.toString());
-            return JSON.parse(data);
+        this.client.get("verifyCode", function (err, data) {
+            console.log(data);
+            this.verifyCode = data;
+            this.client.quit();
         });
-        if(checkCode === code) {
+
+        if(this.verifyCode === code) {
             return true;    // code가 일치하면 true를 반환
         } else {
-            return false;
+            return false;   // 일치하지 않으면 false 반환
         }
     }
 
