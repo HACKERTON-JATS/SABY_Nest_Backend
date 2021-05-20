@@ -20,17 +20,19 @@ export class UserService {
         return !checkEmail;   // email이 존재하면 false를 반환
     }
 
-    public async checkCode(code: string): Promise<boolean> {
+    public async checkCode(code: string): Promise<string> {
         this.client.get("verifyCode", function (err, data) {
             console.log(data);
             this.verifyCode = data;
-            this.client.quit();
+            this.client.quit(); 
         });
 
         if(this.verifyCode === code) {
-            return true;    // code가 일치하면 true를 반환
+            return "correct";    
+        } else if(this.verifyCode === undefined) {
+            return "done";   
         } else {
-            return false;   // 일치하지 않으면 false 반환
+            return "unlike";
         }
     }
 
