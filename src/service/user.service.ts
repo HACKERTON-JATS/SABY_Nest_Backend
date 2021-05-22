@@ -56,7 +56,12 @@ export class UserService {
     }
 
     public async createUser(user: User): Promise<void> {
-        await this.userRepository.manager.save(user);
+        try {
+            await this.userRepository.manager.save(user);
+        } catch(err) {
+            console.log(err);
+            throw new err;       // exception 로직으로 수정
+        }
     }
 
     public async sendCode(email: string): Promise<void> {
@@ -89,6 +94,7 @@ export class UserService {
         }
         catch (err) {
                 console.log(err);
+                throw new err;     // exception 로직으로 수정
             }
         }
 
