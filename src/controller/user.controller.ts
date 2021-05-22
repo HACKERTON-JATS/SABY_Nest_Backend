@@ -9,5 +9,10 @@ export class UserController {
         UserRepository.getQueryRepository()
     );
 
-    public send
+    public overlapEmail: BusinessLogic = async (req, res, next) => {
+        await this.userService.overlapEmail(req.body.email);
+        
+    }
+
+    public 
 }
