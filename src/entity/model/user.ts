@@ -7,6 +7,9 @@ import { Room } from "./room";
 @Entity("user_tbl")
 export class User extends EntityWithIdColumn{
     @Column({ type: "varchar", length: 50 })
+    user_id: string;
+    
+    @Column({ type: "varchar", length: 50 })
     email: string;
 
     @Column({ type: "varchar", length: 50 })
