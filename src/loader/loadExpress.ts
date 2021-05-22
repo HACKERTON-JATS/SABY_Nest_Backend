@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
 import redis from "redis";
+import socketio from "socket.io";
 import { config } from "../config";
 import { HttpError, NotFoundError } from "../shared/exception";
 import { sabyRouter } from "../router";
