@@ -2,6 +2,10 @@ import { User } from "src/entity/model";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import redis from "redis";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { BadRequestError } from "../shared/exception";
+import { config } from "../config";
 import { UserRepository } from "../entity/entity-repository/userRepository";
 
 export class UserService {
@@ -12,7 +16,7 @@ export class UserService {
     private client = redis.createClient(6379, "127.0.0.1");
     private verifyCode: string;
 
-    public async checkEmail(email: string): Promise<boolean> {
+    public async overlapEmail(email: string): Promise<boolean> {
         const checkEmail: User = await this.userRepository.findOne({
             where: { email: email }
         });
@@ -20,11 +24,10 @@ export class UserService {
         return !checkEmail;   // email이 존재하면 false를 반환
     }
 
-    public async checkCode(code: string): Promise<string> {
+    public async checkVerifyCode(code: string): Promise<string> {
         this.client.get("verifyCode", function (err, data) {
             console.log(data);
             this.verifyCode = data;
-            this.client.quit(); 
         });
 
         if(this.verifyCode === code) {
@@ -36,7 +39,7 @@ export class UserService {
         }
     }
 
-    public async checkId(id: string): Promise<boolean> {
+    public async overlapId(id: string): Promise<boolean> {
         const checkId: User = await this.userRepository.findOne({
             where: { id: id }
         })
@@ -44,7 +47,7 @@ export class UserService {
         return !checkId;   // id가 존재하면 false를 반환
     }
 
-    public async checkNickname(nickname: string): Promise<boolean> {
+    public async overlapNickname(nickname: string): Promise<boolean> {
         const checkNickname: User = await this.userRepository.findOne({
             where: { nickname: nickname }
         })
@@ -88,4 +91,34 @@ export class UserService {
                 console.log(err);
             }
         }
+
+    public async issuanceToken(user_id: string): Promise<string> {
+        return jwt.sign({
+            sub: `${user_id}`,
+            type: "access",
+        }, config.jwtSecret, {
+            algorithm: "HS256",
+            expiresIn: "2h",
+        });
+    }
+
+    public async login(user: User) {
+        const existUser = await this.userRepository.findOne({
+            where: { user_id: user.id }
+        });
+
+        if(!existUser) {
+            throw new BadRequestError();
+        }
+
+        const isMatch = await bcrypt.compare(user.password, existUser.password);
+
+        if(isMatch) {
+            return { 
+                  "access_token": await this.issuanceToken(existUser.user_id)
+            };
+        } else {
+            throw new BadRequestError();
+        }
+    }
 }
