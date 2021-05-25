@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
 import redis from "redis";
-import { Server } from "socket.io";
 import { config } from "../config";
 import { HttpError, NotFoundError } from "../shared/exception";
 import { sabyRouter } from "../router";
@@ -46,7 +45,7 @@ export const loadExpress = (app: Application) => {
             statusCode: statusCode,
             message: err.message,
             timeStamp: new Date(),
-        });
+        });  
     });
 
     app.listen(app.get("port"), () => {
