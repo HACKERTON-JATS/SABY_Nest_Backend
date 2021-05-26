@@ -1,7 +1,6 @@
 import { ChatRepository } from "../entity/entity-repository/chatRepository";
 import { RoomRepository } from "../entity/entity-repository/roomRepository";
 import { UserRepository } from "../entity/entity-repository/userRepository";
-import { Chat } from "../entity/model";
 
 export class ChatService {
     constructor(
@@ -17,8 +16,8 @@ export class ChatService {
         });
         const newChat = await this.chatRepository.create({
             message: msg,
-            user_id: user,
-            room_id: room 
+            user_id: user.id,
+            room_id: room.id 
         })
     }
 }
