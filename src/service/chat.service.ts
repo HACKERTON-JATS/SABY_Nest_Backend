@@ -21,7 +21,7 @@ export class ChatService {
             message: msg,
             user_id: user_id,
             room_id: room_id
-        })a
+        })aaa
         await this.chatRepository.save(newChat);
 
         return newChat.message;
