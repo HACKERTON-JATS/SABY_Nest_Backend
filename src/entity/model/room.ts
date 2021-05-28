@@ -1,4 +1,5 @@
-import { Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from "typeorm";
+import { Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
+import { Chat } from ".";
 import { Admin } from "./admin";
 import { EntityWithIdColumn } from "./EntityWithPrimaryColumn";
 import { User } from "./user";
@@ -12,4 +13,7 @@ export class Room extends EntityWithIdColumn {
     @JoinColumn({ name: "user_id" })
     @OneToOne(() => User, user => user.id)
     user_id: User;
+
+    @OneToMany(() => Chat, chat => chat.room_id)
+    chat: Chat[];
 }
