@@ -28,12 +28,6 @@ export const loadExpress = (app: Application) => {
         console.log("Error " + err);
     })
     
-    io.on('connection', (socket) => {
-        console.log('a user connected');
-        socket.on('chat message', (msg) => {
-            io.emit('chat message', msg);
-        })
-    })
     app.use((req: Request, res: Response, next: NextFunction) => {
         next(new NotFoundError(req.url));
     });
@@ -46,7 +40,7 @@ export const loadExpress = (app: Application) => {
             statusCode: statusCode,
             message: err.message,
             timeStamp: new Date(),
-        });
+        });  
     });
 
     app.listen(app.get("port"), () => {

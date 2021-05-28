@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { EntityWithIdColumn } from "./EntityWithPrimaryColumn";
 import { Room } from "./room";
 import { User } from "./user";
@@ -12,10 +12,10 @@ export class Chat extends EntityWithIdColumn {
     created_at: Date;
 
     @JoinColumn({ name: "room_id" })
-    @OneToMany(() => Room, room => room.id)
+    @ManyToOne(() => Room, room => room.id)
     room_id: Room;
 
     @JoinColumn({ name: "user_id"})
-    @OneToMany(() => User, user => user.id)
+    @ManyToOne(() => User, user => user.id)
     user_id: User;
 }
