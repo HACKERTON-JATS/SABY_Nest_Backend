@@ -56,12 +56,8 @@ export class UserService {
     }
 
     public async createUser(user: User): Promise<void> {
-        try {
-            await this.userRepository.manager.save(user);
-        } catch(err) {
-            console.log(err);
-            throw new err;       // exception 로직으로 수정
-        }
+        const newUser = await this.userRepository.save(user);
+        this.userRepository.create(newUser);
     }
 
     public async sendCode(email: string): Promise<void> {
@@ -108,23 +104,22 @@ export class UserService {
         });
     }
 
-    public async login(user: User) {
+    public async login(user: User) {    
         const existUser = await this.userRepository.findOne({
             where: { user_id: user.id }
         });
 
-        if(!existUser) {
+        if(existUser) {
             throw new BadRequestError();
         }
 
         const isMatch = await bcrypt.compare(user.password, existUser.password);
 
-        if(isMatch) {
-            return { 
-                  "access_token": await this.issuanceToken(existUser.user_id)
-            };
-        } else {
+        if(!isMatch) {    // !isMatch로 변경해야함
             throw new BadRequestError();
-        }
+        } 
+        return { 
+            "access_token": await this.issuanceToken(existUser.user_id)
+      };
     }
 }
