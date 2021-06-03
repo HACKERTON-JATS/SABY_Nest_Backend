@@ -7,6 +7,6 @@ export class Admin {
     @PrimaryColumn({ type: "varchar", length: 20, default: "code123"})
     code: string;
 
-    @OneToMany(() => Room, room => room.admin_code)
+    @OneToMany(() => Room, room => room.admin)
     rooms: Room[];
 }
