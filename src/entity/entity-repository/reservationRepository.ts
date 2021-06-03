@@ -15,7 +15,7 @@ export class ReservationRepository extends Repository<Reservation> {
                 {
                     time: reservation.time,
                     reservation: true,
-                    user_id: reservation.user_id
+                    user: reservation.user
                 }
             ])
             .execute()
