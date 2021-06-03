@@ -18,12 +18,12 @@ export class User extends EntityWithIdColumn{
     @Column({ type: "varchar", length: 8 })
     nickname: string;
 
-    @OneToOne(() => Room, room => room.user_id)
+    @OneToOne(() => Room, room => room.user)
     room: Room;
 
-    @OneToMany(() => Chat, chat => chat.user_id)
+    @OneToMany(() => Chat, chat => chat.user)
     chats: Chat[];
 
-    @OneToMany(() => Reservation, reservation => reservation.user_id)
+    @OneToMany(() => Reservation, reservation => reservation.user)
     reservations: Reservation[];
 }
