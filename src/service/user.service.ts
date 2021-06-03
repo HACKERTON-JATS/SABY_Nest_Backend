@@ -115,7 +115,7 @@ export class UserService {
 
         const isMatch = await bcrypt.compare(user.password, existUser.password);
 
-        if(!isMatch) {    // !isMatch로 변경해야함
+        if(!isMatch) {    
             throw new BadRequestError();
         } 
         return { 
