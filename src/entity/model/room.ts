@@ -8,12 +8,12 @@ import { User } from "./user";
 export class Room extends EntityWithIdColumn {
     @JoinColumn({ name: "admin_code"})
     @ManyToOne(() => Admin, admin => admin.rooms)
-    admin_code: Admin;
+    admin: Admin;
 
     @JoinColumn({ name: "user_id" })
     @OneToOne(() => User, user => user.id)
-    user_id: User;
+    user: User[];
 
-    @OneToMany(() => Chat, chat => chat.room_id)
+    @OneToMany(() => Chat, chat => chat.room)
     chat: Chat[];
 }
