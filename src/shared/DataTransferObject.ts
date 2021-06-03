@@ -5,3 +5,7 @@ export default interface SocketTypes extends Socket {
     nickname?: string;
     currentRoom?: string;
 }
+
+export default interface Payload extends Object {
+    [key: string]: any
+}
