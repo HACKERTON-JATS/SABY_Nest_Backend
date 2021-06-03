@@ -39,6 +39,12 @@ export class BadRequestError extends HttpError {
     }
 }
 
+export class GoneError extends HttpError {
+    constructor(message = "Gone") {
+        super(410, message);
+    }
+}
+
 export class InternalServerError extends HttpError {
     constructor() {
         super(500, "Interal Server Error");
