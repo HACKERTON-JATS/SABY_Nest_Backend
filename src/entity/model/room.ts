@@ -12,7 +12,7 @@ export class Room extends EntityWithIdColumn {
 
     @JoinColumn({ name: "user_id" })
     @OneToOne(() => User, user => user.id)
-    user: User[];
+    user: User;
 
     @OneToMany(() => Chat, chat => chat.room)
     chat: Chat[];
