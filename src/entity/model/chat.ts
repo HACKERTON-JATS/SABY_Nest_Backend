@@ -13,9 +13,9 @@ export class Chat extends EntityWithIdColumn {
 
     @JoinColumn({ name: "room_id" })
     @ManyToOne(() => Room, room => room.id)
-    room_id: Room;
+    room: Room;
 
     @JoinColumn({ name: "user_id"})
     @ManyToOne(() => User, user => user.id)
-    user_id: User;
+    user: User;
 }
