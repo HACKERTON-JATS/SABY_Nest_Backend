@@ -13,8 +13,8 @@ export class RoomRepository extends Repository<Room> {
             .insert()
             .values([
                 {
-                    admin_code: room.admin_code,
-                    user_id: room.user_id
+                    admin: room.admin,
+                    user: room.user
                 }
             ])
             .execute()
