@@ -8,9 +8,10 @@ export class UserRepository extends Repository<User> {
         return getCustomRepository(UserRepository)
     }
 
-    public async createUser(user: User): Promise<User> {
-        const newUser: User = new User();
-        newUser.nickname = user.nickname;
-        return this.manager.save(newUser);
+    public async getNickname(userId: number): Promise<string> {
+        return this.createQueryBuilder("user")
+            .select("user.nickname", "nickname")
+            .where("user.id = :id", { id: userId })
+            .getRawOne()
     }
 }
