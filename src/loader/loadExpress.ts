@@ -5,6 +5,7 @@ import morgan from "morgan";
 import cors from "cors";
 import redis from "redis";
 import { Server } from "socket.io";
+import SocketApp from "../socketApp";
 import { config } from "../config";
 import { HttpError, NotFoundError } from "../shared/exception";
 import { sabyRouter } from "../router";
@@ -43,7 +44,18 @@ export const loadExpress = (app: Application) => {
         });  
     });
 
-    app.listen(app.get("port"), () => {
+    const server = app.listen(app.get("port"), () => {
         console.log("server on", app.get("port"));
+        socketServer();
     });
+
+    const socketServer = () => {
+        const socketApp = new SocketApp();
+        const io = new Server(server, {
+            cors: {
+                origin: "*",
+            }
+        });
+        socketApp.start(io);
+    }
 }
