@@ -11,8 +11,6 @@ import { HttpError, NotFoundError } from "../shared/exception";
 import { sabyRouter } from "../router";
 import { logger } from "../shared/logger";
 
-const client = redis.createClient(6379, "127.0.0.1");
-
 export const loadExpress = (app: Application) => {
     app.set("port", config.ServicePort || "3000");
 
@@ -24,6 +22,8 @@ export const loadExpress = (app: Application) => {
     app.use(cors());
 
     app.use("/", sabyRouter());
+    
+    const client = redis.createClient(6379, "127.0.0.1");
 
     client.on("error", function (err) {
         console.log("Error " + err);
