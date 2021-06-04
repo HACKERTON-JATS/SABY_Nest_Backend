@@ -2,8 +2,8 @@ import databaseConfigList from "./database-config";
 
 type NodeEnvironment = "production" | "test" | "development";
 
-const env: NodeEnvironment = process.env.NODE_ENV as NodeEnvironment;
-const databaseConfig = databaseConfigList[env];
+const env = process.env.NODE_ENV;
+const databaseConfig = databaseConfigList["development"];
 
 export const config = {
     NodeEnv: env,
