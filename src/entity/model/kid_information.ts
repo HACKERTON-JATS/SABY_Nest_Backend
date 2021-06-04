@@ -4,9 +4,10 @@ import { Reservation } from "./reservation";
 @Entity("kid_information_tbl")
 export class kidInformation {
     @PrimaryColumn()
+    reservation_id: number;
     @JoinColumn({ name: "reservation_id" })
     @OneToOne(() => Reservation, reservation => reservation.id)
-    reservation_id: Reservation;
+    reservation: Reservation;
 
     @Column({ type: "datetime" })
     birth_date: Date;
