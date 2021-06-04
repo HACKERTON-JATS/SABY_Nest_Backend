@@ -2,7 +2,6 @@ import { NextFunction } from "express";
 import { Server } from "socket.io";
 import { config } from "./config";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
-import { TokenPayload } from "./shared/TokenPayloadInterface";
 import { UnAuthorizedTokenError, GoneError } from "./shared/exception";
 import { ChatService } from "./service/chat.service";
 import { UserService } from "./service/user.service";
@@ -20,6 +19,9 @@ export default class SocketApp {
         UserRepository.getQueryRepository(),
         AdminRepository.getQueryRepository()
     );
+    private userService: UserService = new UserService(
+        UserRepository.getQueryRepository()
+    );
 
     public async start(io: Server) {
         io.use(async (socket: SocketTypes | any, next: NextFunction | any) => {
@@ -34,10 +36,11 @@ export default class SocketApp {
                     config.jwtSecret,
                     (err: Error, payload: Payload) => {
                         socket.userId = payload.id;
-                        socket.nickname = payload.nickname;
                         next();
                     }
                 );
+                const nickname: string = await this.userService.getNickname(socket.userId);
+                socket.nickname = nickname;
             } catch (err) {
                 if (err instanceof TokenExpiredError) {
                     throw new GoneError();
@@ -57,8 +60,36 @@ export default class SocketApp {
                 console.log(`${socket.nickname} make room ${roomId}`);
             });
 
-            socket.on("joinRoom", async () => {
-                
+            socket.on("joinRoom", async (roomId) => {
+                await socket.join(roomId);
+                const chat = await this.chatService.joinRoom(roomId);
+                socket.currentRoom = roomId;
+                console.log(`${socket.nickname} join room ${roomId}`);
+                socket.broadcast.to(socket.currentRoom).emit('joinRoom', chat);
+            });
+
+            socket.on("leaveRoom", async (roomId) => {
+                console.log(`${socket.nickname} is leave room ${socket.currentRoom}`);
+                socket.leave(socket.currentRoom);
+                socket.broadcast.to(socket.currentRoom).emit("leaveRoom", socket.nickname);
+                await this.chatService.deleteRoom(roomId);
+            });
+
+            socket.on('sendMessage', async (msg: string) => {
+                const newChat = await this.chatService.sendMessage(
+                    msg,
+                    socket.userId,
+                    socket.currentRoom
+                );
+                socket.broadcast
+                    .in(socket.currentRoom)
+                    .emit("receiveMessage", msg, socket.nickname);
+                console.log(`${socket.nickname}: ${newChat}`);
+            });
+
+            socket.on("disconnect", () => {
+                socket.in(socket.currentRoom).emit("leaveRoom", socket.nickname);
+                socket.leave(socket.currentRoom);
             })
         })
     }
