@@ -39,9 +39,9 @@ export class UserService {
         }
     }
 
-    public async overlapId(id: string): Promise<boolean> {
+    public async overlapId(userId: string): Promise<boolean> {
         const checkId: User = await this.userRepository.findOne({
-            where: { id: id }
+            where: { user_id: userId }
         })
 
         return !checkId;   // id가 존재하면 false를 반환
@@ -94,7 +94,7 @@ export class UserService {
             }
         }
 
-    public async issuanceToken(user_id: string): Promise<string> {
+    public async issuanceToken(user_id: number): Promise<string> {
         return jwt.sign({
             sub: `${user_id}`,
             type: "access",
@@ -106,7 +106,7 @@ export class UserService {
 
     public async login(user: User) {    
         const existUser = await this.userRepository.findOne({
-            where: { user_id: user.id }
+            where: { user_id: user.user_id }
         });
 
         if(existUser) {
@@ -119,7 +119,12 @@ export class UserService {
             throw new BadRequestError();
         } 
         return { 
-            "access_token": await this.issuanceToken(existUser.user_id)
+            "access_token": await this.issuanceToken(existUser.id)
       };
+    }
+
+    public async getNickname(userId: number): Promise<string> {
+        const nickname = await this.userRepository.getNickname(userId);
+        return nickname;
     }
 }
