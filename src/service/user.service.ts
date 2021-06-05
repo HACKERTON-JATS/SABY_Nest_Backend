@@ -1,10 +1,10 @@
 import { User } from "src/entity/model";
-import nodemailer from "nodemailer";
-import crypto from "crypto";
+import * as nodemailer from "nodemailer";
+import * as crypto from "crypto";
 import * as redis from "redis";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { BadRequestError } from "../shared/exception";
+import * as jwt from "jsonwebtoken";
+import * as bcrypt from "bcrypt";
+import { BadRequestError, NotFoundError } from "../shared/exception";
 import { config } from "../config";
 import { UserRepository } from "../entity/entity-repository/userRepository";
 
@@ -15,7 +15,6 @@ export class UserService {
     
     private client = redis.createClient(6379, "127.0.0.1");
     private verifyCode: string;
-
     public async overlapEmail(email: string): Promise<boolean> {
         const checkEmail: User = await this.userRepository.findOne({
             where: { email: email }
@@ -24,24 +23,9 @@ export class UserService {
         return !checkEmail;   // email이 존재하면 false를 반환
     }
 
-    public async checkVerifyCode(code: string): Promise<string> {
-        this.client.get("verifyCode", function (err, data) {
-            console.log(data);
-            this.verifyCode = data;
-        });
-
-        if(this.verifyCode === code) {
-            return "correct";    
-        } else if(this.verifyCode === undefined) {
-            return "done";   
-        } else {
-            return "unlike";
-        }
-    }
-
-    public async overlapId(userId: string): Promise<boolean> {
+    public async overlapId(user_id: string): Promise<boolean> {
         const checkId: User = await this.userRepository.findOne({
-            where: { user_id: userId }
+            where: { user_id: user_id }
         })
 
         return !checkId;   // id가 존재하면 false를 반환
@@ -56,8 +40,9 @@ export class UserService {
     }
 
     public async createUser(user: User): Promise<void> {
-        const newUser = await this.userRepository.save(user);
-        this.userRepository.create(newUser);
+        const hashPassword = await bcrypt.hash(user.password, 12);
+        user.password = hashPassword;
+        await this.userRepository.createUser(user);
     }
 
     public async sendCode(email: string): Promise<void> {
@@ -76,21 +61,28 @@ export class UserService {
             });
 
             let info = await transporter.sendMail({
-                from: `"SABY TEAM <${process.env.NODEMAILER_USER}>`,
+                from: `TEAM JATS ${process.env.NODEMAILER_USER}`,
                 to: email,
                 subject: 'SABY Auth Number',
                 text: code,
                 html: `<b>${code}</b>`,
             });
-    
+            
             console.log('Message send: %s', info.messageId);
 
-            this.client.set("verifyCode", code);
-            this.client.expire(code, 60 * 3);        
+            transporter.close();
+
+            this.client.set("verifyCode", code, function (err, data) {
+                if(err) {
+                    console.log(err);
+                    return;
+                }
+            });
+            this.client.expire("verifyCode", 60);
         }
         catch (err) {
                 console.log(err);
-                throw new err;     // exception 로직으로 수정
+                throw new err;     
             }
         }
 
@@ -109,14 +101,13 @@ export class UserService {
             where: { user_id: user.user_id }
         });
 
-        if(existUser) {
-            throw new BadRequestError();
+        if(!existUser) {
+            throw new NotFoundError('존재하지 않는 아이디입니다.');
         }
-
         const isMatch = await bcrypt.compare(user.password, existUser.password);
 
-        if(!isMatch) {    
-            throw new BadRequestError();
+        if(!isMatch) {   
+            throw new BadRequestError("비밀번호가 일치하지 않습니다.");
         } 
         return { 
             "access_token": await this.issuanceToken(existUser.id)
