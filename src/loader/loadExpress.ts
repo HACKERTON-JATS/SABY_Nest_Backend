@@ -1,9 +1,9 @@
-import fs from "fs";
+import * as fs from "fs";
 import { NextFunction, Request, Response, Application } from "express";
-import bodyParser from "body-parser";
-import morgan from "morgan";
-import cors from "cors";
-import redis from "redis";
+import * as bodyParser from "body-parser";
+import * as morgan from "morgan";
+import * as cors from "cors";
+import * as redis from "redis";
 import { Server } from "socket.io";
 import SocketApp from "../socketApp";
 import { config } from "../config";
