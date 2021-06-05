@@ -1,3 +1,4 @@
+import { UserSignup } from "src/shared/DataTransferObject";
 import { EntityRepository, getCustomRepository, Repository } from "typeorm";
 import { User } from "../model/user";
 
@@ -13,5 +14,19 @@ export class UserRepository extends Repository<User> {
             .select("user.nickname", "nickname")
             .where("user.id = :id", { id: userId })
             .getRawOne()
+    }
+
+    public async createUser(user: UserSignup): Promise<void> {
+        await this.createQueryBuilder()
+            .insert()
+            .values([
+                { 
+                    user_id: user.user_id,
+                    password: user.password,
+                    email: user.email,
+                    nickname: user.nickname
+                }
+            ])
+            .execute()
     }
 }
