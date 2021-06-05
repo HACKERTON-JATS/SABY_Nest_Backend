@@ -1,7 +1,7 @@
 import { User } from "src/entity/model";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
-import redis from "redis";
+import * as redis from "redis";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { BadRequestError } from "../shared/exception";
