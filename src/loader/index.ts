@@ -1,4 +1,5 @@
-import express, { Application } from "express";
+import { Application } from "express";
+import * as express from "express";
 import { connectDatabase } from "./connectDatabase"
 import { loadExpress } from "./loadExpress";
 
