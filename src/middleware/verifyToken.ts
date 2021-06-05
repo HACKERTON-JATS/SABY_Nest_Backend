@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { BusinessLogic } from "../shared/BusinessLogicInterface";
 import { errorHandler } from './errorHandler';
 import { TokenPayload } from './../shared/TokenPayloadInterface';
@@ -22,11 +22,11 @@ const verifyTokenLogic: (type: string, headers: string) => BusinessLogic =
     if(err.message === "TokenExpiredError") {
       next(new ExpiredTokenError());
     } else {
+      console.log(err);
       next(new UnAuthorizedTokenError());
     }
   }
 }
 
 const verifyTokenMiddleware: BusinessLogic = errorHandler(verifyTokenLogic("access", "authorization"));
-const verifyRefreshTokenMiddleware: BusinessLogic = errorHandler(verifyTokenLogic("refresh", "refresh-token"));
-export { verifyTokenMiddleware, verifyRefreshTokenMiddleware }
+export { verifyTokenMiddleware }
