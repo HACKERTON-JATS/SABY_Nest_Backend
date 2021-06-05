@@ -14,4 +14,10 @@ export const reservationServiceRouter = (app: Router) => {
         verifyTokenMiddleware,
         errorHandler(reservationController.makeReservation)
     );
+
+    router.get(
+        "/reservation_time",
+        verifyTokenMiddleware,
+        errorHandler(reservationController.getReservation)
+    )
 }
