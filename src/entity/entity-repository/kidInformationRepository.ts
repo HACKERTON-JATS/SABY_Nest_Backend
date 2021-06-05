@@ -8,11 +8,12 @@ export class KidInformationRepository extends Repository<kidInformation> {
         return getCustomRepository(KidInformationRepository);
     }
 
-    public async createInformation(kidInformation: kidInformation): Promise<void> {
+    public async createInformation(reservationId: number, kidInformation: kidInformation): Promise<void> {
         await this.createQueryBuilder()
             .insert()
             .values([
                 {
+                    reservation_id: reservationId,
                     birth_date: kidInformation.birth_date,
                     kid_name: kidInformation.kid_name,
                     vaccination: kidInformation.vaccination,
