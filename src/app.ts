@@ -7,7 +7,10 @@ import { initApplication } from "./loader";
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
 initApplication()
-    .catch(() => console.error("server start failed"));
+    .catch((err) => {
+        console.error("server start failed");
+        console.log(err);
+    });
 
 process.on("uncaughtException", (err: Error) => {
     console.error(err);
