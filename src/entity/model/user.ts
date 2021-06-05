@@ -12,7 +12,7 @@ export class User extends EntityWithIdColumn{
     @Column({ type: "varchar", length: 50 })
     email: string;
 
-    @Column({ type: "varchar", length: 50 })
+    @Column({ type: "varchar", length: 80 })
     password: string;
 
     @Column({ type: "varchar", length: 8 })
