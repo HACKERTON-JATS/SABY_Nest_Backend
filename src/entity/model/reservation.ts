@@ -15,7 +15,7 @@ export class Reservation extends EntityWithIdColumn {
     reservation: boolean;
 
     @JoinColumn({ name: "user_id"})
-    @ManyToOne(() => User, user => user.id)
+    @ManyToOne(() => User, user => user.reservations)
     user: User;
 
     @OneToOne(() => kidInformation, kidinformation => kidinformation.reservation_id)
