@@ -10,7 +10,9 @@ export class UserController {
     private client = redis.createClient(6379, "127.0.0.1");
 
     public overlapEmail: BusinessLogic = async (req, res, next) => {
-        if(await this.userService.overlapEmail(String(req.query.email))) {
+        if(await this.userService.overlapEmail(req.query.email as string)) {
+            console.log(req.query.email);
+            console.log(typeof req.query.email)
             res.status(200).json({
                 message: "pass"
             });
@@ -26,7 +28,7 @@ export class UserController {
             if(err) {
                 res.status(400);
             }
-            if(String(req.query.code) === data) {
+            if(req.query.code as string === data) {
                 res.status(200).json({
                     message: "correct"
                 });
@@ -43,7 +45,7 @@ export class UserController {
     }
 
     public overlapId: BusinessLogic = async (req, res, next) => {
-        if(await this.userService.overlapId(String(req.query.user_id))) {
+        if(await this.userService.overlapId(req.query.user_id as string)) {
             res.status(200).json({
                 message: "pass"
             })
@@ -55,7 +57,7 @@ export class UserController {
     }
 
     public overlapNickname: BusinessLogic = async (req, res, next) => {
-        if(await this.userService.overlapNickname(String(req.query.nickname))) {
+        if(await this.userService.overlapNickname(req.query.nickname as string)) {
             res.status(200).json({
                 message: "pass"
             })
