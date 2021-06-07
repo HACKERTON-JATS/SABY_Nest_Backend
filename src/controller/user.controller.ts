@@ -1,6 +1,7 @@
 import { UserRepository } from "../entity/entity-repository/userRepository";
 import { UserService } from "../service/user.service";
 import { BusinessLogic } from "../shared/BusinessLogicInterface";
+import * as querystring from "querystring";
 import * as redis from "redis";
 
 export class UserController {
@@ -11,8 +12,6 @@ export class UserController {
 
     public overlapEmail: BusinessLogic = async (req, res, next) => {
         if(await this.userService.overlapEmail(req.query.email as string)) {
-            console.log(req.query.email);
-            console.log(typeof req.query.email)
             res.status(200).json({
                 message: "pass"
             });
