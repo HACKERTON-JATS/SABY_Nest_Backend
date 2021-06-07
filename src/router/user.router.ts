@@ -19,19 +19,16 @@ export const userServiceRouter = (app: Router) => {
 
     router.get(
         "/members/email",
-        validationRequest(UserEamilSchema),
         errorHandler(userController.overlapEmail)
     );
 
     router.get(
         "/members/id",
-        validationRequest(UserIdSchema),
         errorHandler(userController.overlapId)
     );
 
     router.get(
         "/members/nickname",
-        validationRequest(UserNicknameSchema),
         errorHandler(userController.overlapNickname)
     );
 
@@ -43,7 +40,6 @@ export const userServiceRouter = (app: Router) => {
 
     router.get(
         "/sms-certification/confirms",
-        validationRequest(UserVerifyCodeSchema),
         errorHandler(userController.checkVerifyCode)
     );
 

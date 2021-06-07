@@ -1,7 +1,8 @@
 import { NextFunction } from "express";
 import { Server } from "socket.io";
 import { config } from "./config";
-import jwt, { TokenExpiredError } from "jsonwebtoken";
+import { TokenExpiredError } from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { UnAuthorizedTokenError, GoneError } from "./shared/exception";
 import { ChatService } from "./service/chat.service";
 import { UserService } from "./service/user.service";
@@ -39,8 +40,11 @@ export default class SocketApp {
                         next();
                     }
                 );
-                const nickname: string = await this.userService.getNickname(socket.userId);
-                socket.nickname = nickname;
+                const nickname: string = await this.userService.getNickname(socket.userId);  // 만약 값이 없으면 어드민에서 찾고 할당
+                if(!nickname) {
+                    socket.nickname = "admin";
+                }
+                socket.nickname = nickname;        // admin이 보낼 때 생각
             } catch (err) {
                 if (err instanceof TokenExpiredError) {
                     throw new GoneError();
@@ -65,13 +69,18 @@ export default class SocketApp {
                 const chat = await this.chatService.joinRoom(roomId);
                 socket.currentRoom = roomId;
                 console.log(`${socket.nickname} join room ${roomId}`);
-                socket.broadcast.to(socket.currentRoom).emit('joinRoom', chat);
+                socket.broadcast.to(socket.currentRoom).emit('joinRoom', socket.nickname, chat);
             });
 
-            socket.on("leaveRoom", async (roomId) => {
+            socket.on("leaveRoom", async () => {
                 console.log(`${socket.nickname} is leave room ${socket.currentRoom}`);
                 socket.leave(socket.currentRoom);
                 socket.broadcast.to(socket.currentRoom).emit("leaveRoom", socket.nickname);
+            });
+
+            socket.on("deleteRoom", async (roomId) => {
+                console.log(`${socket.nickname} is delete room ${roomId}`);
+                socket.leave(roomId);
                 await this.chatService.deleteRoom(roomId);
             });
 
@@ -81,9 +90,10 @@ export default class SocketApp {
                     socket.userId,
                     socket.currentRoom
                 );
+                const createdAt = new Date();
                 socket.broadcast
                     .in(socket.currentRoom)
-                    .emit("receiveMessage", msg, socket.nickname);
+                    .emit("receiveMessage", msg, socket.nickname, createdAt);
                 console.log(`${socket.nickname}: ${newChat}`);
             });
 
