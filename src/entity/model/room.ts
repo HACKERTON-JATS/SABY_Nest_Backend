@@ -11,9 +11,9 @@ export class Room extends EntityWithIdColumn {
     admin: Admin;
 
     @JoinColumn({ name: "user_id" })
-    @OneToOne(() => User, user => user.id)
+    @OneToOne(() => User, user => user.room)
     user: User;
 
     @OneToMany(() => Chat, chat => chat.room)
-    chat: Chat[];
+    chats: Chat[];
 }
