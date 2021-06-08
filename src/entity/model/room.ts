@@ -6,7 +6,7 @@ import { User } from "./user";
 
 @Entity("room_tbl")
 export class Room extends EntityWithIdColumn {
-    @JoinColumn({ name: "admin_code"})
+    @JoinColumn({ name: "admin_code" })
     @ManyToOne(() => Admin, admin => admin.rooms)
     admin: Admin;
 
