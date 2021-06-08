@@ -8,11 +8,11 @@ export class Reservation extends EntityWithIdColumn {
     @Column({ type: "datetime"})
     time: Date;
 
-    @Column({ type: "tinyint", default: false })
-    take: boolean;
+    @Column({ type: "tinyint", default: 0 })
+    is_take: boolean;
 
-    @Column({ type: "tinyint", default: false })
-    reservation: boolean;
+    @Column({ type: "tinyint", default: 0 })
+    is_reservation: boolean;
 
     @JoinColumn({ name: "user_id"})
     @ManyToOne(() => User, user => user.reservations)
