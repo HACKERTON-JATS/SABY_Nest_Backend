@@ -104,11 +104,9 @@ export class UserService {
         if(!existUser) {
             throw new NotFoundError('존재하지 않는 아이디입니다.');
         }
-        bcrypt.compare(user.password, existUser.password, function(err, result) {
-            if(!result) {
-                throw new BadRequestError("비밀번호가 일치하지 않습니다.");
-            }
-        });
+        if(!bcrypt.compare(user.password, existUser.password)) {
+            throw new BadRequestError("비밀번호가 일치하지 않습니다.");
+        }
         return { 
             "access_token": await this.issuanceToken(existUser.id)
       };
