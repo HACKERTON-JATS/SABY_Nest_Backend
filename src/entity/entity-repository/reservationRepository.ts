@@ -15,7 +15,7 @@ export class ReservationRepository extends Repository<Reservation> {
             .values([
                 {
                     time: reservation.time,
-                    reservation: true,
+                    is_reservation: true,
                     user: user
                 }
             ])
