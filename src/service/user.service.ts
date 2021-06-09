@@ -104,7 +104,7 @@ export class UserService {
         if(!existUser) {
             throw new NotFoundError('존재하지 않는 아이디입니다.');
         }
-        const isCorrect = await bcrypt.compare(existUser.password, user.password);
+        const isCorrect = await bcrypt.compare(user.password, existUser.password);
         if(!isCorrect) {
             throw new BadRequestError("비밀번호가 일치하지 않습니다.");
         }
