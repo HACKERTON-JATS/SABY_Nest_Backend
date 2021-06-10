@@ -19,8 +19,7 @@ export class KidInformationRepository extends Repository<kidInformation> {
                     vaccination: kidInformation.vaccination,
                     fetus_name: kidInformation.fetus_name,
                     request: kidInformation.request,
-                    caution: kidInformation.caution,
-                    give_later: kidInformation.give_later
+                    caution: kidInformation.caution
                 }
             ])
             .execute()
