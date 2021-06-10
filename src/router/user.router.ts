@@ -53,5 +53,11 @@ export const userServiceRouter = (app: Router) => {
         "/logout",
         verifyTokenMiddleware,
         errorHandler(userController.logout)
-    )
+    );
+
+    router.get(
+        "/questions",
+        verifyTokenMiddleware,
+        errorHandler(userController.getAnswer)
+    );
 }
