@@ -3,10 +3,12 @@ import { UserService } from "../service/user.service";
 import { BusinessLogic } from "../shared/BusinessLogicInterface";
 import * as querystring from "querystring";
 import * as redis from "redis";
+import { QuestionRepository } from "../entity/entity-repository/questionRepository";
 
 export class UserController {
     private userService: UserService = new UserService(
-        UserRepository.getQueryRepository()
+        UserRepository.getQueryRepository(),
+        QuestionRepository.getQueryRepository()
     );
     private client = redis.createClient(6379, "127.0.0.1");
 
@@ -93,5 +95,10 @@ export class UserController {
         res.status(200).json({
             message: "success"
         })
+    }
+
+    public getAnswer: BusinessLogic = async (req, res, next) => {
+        const answer = await this.userService.getAnswer(+req.query.answer_id);
+        res.status(200).json(answer);
     }
 }
