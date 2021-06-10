@@ -1,4 +1,4 @@
-import { User } from "src/entity/model";
+import { Question, User } from "src/entity/model";
 import * as nodemailer from "nodemailer";
 import * as crypto from "crypto";
 import * as redis from "redis";
@@ -7,14 +7,15 @@ import * as bcrypt from "bcrypt";
 import { BadRequestError, NotFoundError } from "../shared/exception";
 import { config } from "../config";
 import { UserRepository } from "../entity/entity-repository/userRepository";
+import { QuestionRepository } from "src/entity/entity-repository/questionRepository";
 
 export class UserService {
     constructor(
         private userRepository: UserRepository,
+        private questionRepository: QuestionRepository
     ) { }
     
     private client = redis.createClient(6379, "127.0.0.1");
-    private verifyCode: string;
     public async overlapEmail(email: string): Promise<boolean> {
         const checkEmail: User = await this.userRepository.findOne({
             where: { email: email }
@@ -118,5 +119,9 @@ export class UserService {
     public async getNickname(userId: number): Promise<string> {
         const nickname = await this.userRepository.getNickname(userId);
         return nickname;
+    }
+
+    public async getAnswer(answer_id: number): Promise<string> {
+        return await this.questionRepository.getAnswer(answer_id);
     }
 }   
