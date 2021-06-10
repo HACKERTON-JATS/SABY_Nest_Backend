@@ -108,8 +108,10 @@ export class UserService {
         if(!isCorrect) {
             throw new BadRequestError("비밀번호가 일치하지 않습니다.");
         }
+        const nickname = await this.userRepository.getNickname(existUser.id);
         return { 
-            "access_token": await this.issuanceToken(existUser.id)
+            "access_token": await this.issuanceToken(existUser.id),
+            nickname
       };
     }
 
