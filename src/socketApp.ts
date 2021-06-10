@@ -12,6 +12,7 @@ import { UserRepository } from "./entity/entity-repository/userRepository";
 import { ChatRepository } from "./entity/entity-repository/chatRepository";
 import { RoomRepository } from "./entity/entity-repository/roomRepository";
 import { AdminRepository } from "./entity/entity-repository/adminRepository";
+import { QuestionRepository } from "./entity/entity-repository/questionRepository";
 
 export default class SocketApp {
     private chatService: ChatService = new ChatService(
@@ -21,7 +22,8 @@ export default class SocketApp {
         AdminRepository.getQueryRepository()
     );
     private userService: UserService = new UserService(
-        UserRepository.getQueryRepository()
+        UserRepository.getQueryRepository(),
+        QuestionRepository.getQueryRepository()
     );
 
     public async start(io: Server) {
