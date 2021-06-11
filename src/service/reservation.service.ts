@@ -30,4 +30,9 @@ export class ReservationService {
         const time = await this.reservationRepository.getReservationTime(user_id);
         return time;
     }
+
+    public async isReservation(): Promise<Date[]> {
+        const time = await this.reservationRepository.isReservation();
+        return time;
+    }
 }   
