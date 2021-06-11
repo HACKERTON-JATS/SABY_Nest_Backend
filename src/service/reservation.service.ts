@@ -23,8 +23,7 @@ export class ReservationService {
         });
         await this.reservationRepository.makeReservation(reservation, user);
         const id = this.reservationRepository.getId();
-        const reservationId = await this.reservationRepository.getReservationId(id[0]);
-        await this.kidInformationRepository.createInformation(reservationId, kidInformation);
+        await this.kidInformationRepository.createInformation(id[0], kidInformation);
     }
 
     public async getReservation(user_id: number): Promise<Date[]> {
