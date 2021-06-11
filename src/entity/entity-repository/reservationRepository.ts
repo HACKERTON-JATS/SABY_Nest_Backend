@@ -42,10 +42,10 @@ export class ReservationRepository extends Repository<Reservation> {
             .getRawMany()
     }
 
-    public async getId(): Promise<number[]> {
+    public async getId(): Promise<number> {
         return await this.createQueryBuilder("reservation")
+            .orderBy("reservation.id", "DESC")
             .select("reservation.id", "id")
-            .orderBy("DESC")
-            .getRawMany()
+            .getRawOne()
     }
 }
