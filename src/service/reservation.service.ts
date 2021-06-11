@@ -22,7 +22,8 @@ export class ReservationService {
             where: { id: user_id }
         });
         await this.reservationRepository.makeReservation(reservation, user);
-        const reservationId = await this.reservationRepository.getReservationId(String(reservation.time));
+        const id = this.reservationRepository.getId();
+        const reservationId = await this.reservationRepository.getReservationId(id[0]);
         await this.kidInformationRepository.createInformation(reservationId, kidInformation);
     }
 

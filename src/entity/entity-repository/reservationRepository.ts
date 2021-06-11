@@ -22,7 +22,7 @@ export class ReservationRepository extends Repository<Reservation> {
             .execute()
     }
 
-    public async getReservationId(time: string): Promise<number> {
+    public async getReservationId(time: Date): Promise<number> {
         return await this.createQueryBuilder("reservation")
             .select("reservation.id", "id")
             .where("reservation.time = :time", { time: time })
@@ -39,6 +39,13 @@ export class ReservationRepository extends Repository<Reservation> {
     public async isReservation(): Promise<Date[]> {
         return await this.createQueryBuilder("reservation")
             .select("reservation.time", "time")
+            .getRawMany()
+    }
+
+    public async getId(): Promise<number[]> {
+        return await this.createQueryBuilder("reservation")
+            .select("reservation.id", "id")
+            .orderBy("DESC")
             .getRawMany()
     }
 }
