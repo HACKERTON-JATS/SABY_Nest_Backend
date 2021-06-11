@@ -85,12 +85,9 @@ export class UserController {
 
     public login: BusinessLogic = async (req, res, next) => {
         const value = await this.userService.login(req.body);
-        const token = value.access_token;
-        const nickname = value.nickname;
         res.status(200).json({
             message: "success",
-            token, 
-            nickname
+            value
         })
     }
 
