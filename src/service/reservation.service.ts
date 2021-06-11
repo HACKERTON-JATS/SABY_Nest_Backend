@@ -21,8 +21,13 @@ export class ReservationService {
         const user = await this.userRepository.findOne({
             where: { id: user_id }
         });
-        await this.reservationRepository.makeReservation(reservation, user);
-        const reservationId = await this.reservationRepository.getReservationId(reservation.time);
+        const makeReservation = this.reservationRepository.create({
+            time: reservation.time,
+            is_reservation: true,
+            user: user
+        });
+        await this.reservationRepository.save(makeReservation);
+        const reservationId = await this.reservationRepository.getReservationId(makeReservation.time);
         await this.kidInformationRepository.createInformation(reservationId, kidInformation);
     }
 
