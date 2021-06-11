@@ -22,7 +22,7 @@ export class ReservationRepository extends Repository<Reservation> {
             .execute()
     }
 
-    public async getReservationId(time: Date): Promise<number> {
+    public async getReservationId(time: string): Promise<number> {
         return await this.createQueryBuilder("reservation")
             .select("reservation.id", "id")
             .where("reservation.time = :time", { time: time })
