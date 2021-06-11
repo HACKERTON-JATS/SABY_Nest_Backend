@@ -36,7 +36,7 @@ export class ReservationRepository extends Repository<Reservation> {
             .getRawMany()
     }
 
-    public async isReservation(): Promise<string[]> {
+    public async isReservation(): Promise<Date[]> {
         return await this.createQueryBuilder("reservation")
             .select("reservation.time", "time")
             .getRawMany()

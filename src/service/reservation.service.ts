@@ -31,19 +31,8 @@ export class ReservationService {
         return time;
     }
 
-    public async isReservation(): Promise<Object> {
+    public async isReservation(): Promise<Date[]> {
         const time = await this.reservationRepository.isReservation();
-        let dates: string[];
-        let times: string[];
-        for(let i = 0; i < time.length; i++) {
-            let split = time[i].split('T');
-            dates[i] = split[0];
-            times[i] = time[i].substring(11, 12)
-        }
-        const Date = {
-            dates,
-            times
-        }
-        return Date;
+        return time;
     }
 }   
