@@ -14,7 +14,7 @@ export class UserService {
         private userRepository: UserRepository,
         private questionRepository: QuestionRepository
     ) { }
-    
+
     private client = redis.createClient(6379, "127.0.0.1");
     public async overlapEmail(email: string): Promise<boolean> {
         const checkEmail: User = await this.userRepository.findOne({
@@ -68,13 +68,13 @@ export class UserService {
                 text: code,
                 html: `<b>${code}</b>`,
             });
-            
+
             console.log('Message send: %s', info.messageId);
 
             transporter.close();
 
             this.client.set("verifyCode", code, function (err, data) {
-                if(err) {
+                if (err) {
                     console.log(err);
                     return;
                 }
@@ -82,10 +82,10 @@ export class UserService {
             this.client.expire("verifyCode", 60);
         }
         catch (err) {
-                console.log(err);
-                throw new err;     
-            }
+            console.log(err);
+            throw new err;
         }
+    }
 
     public async issuanceToken(user_id: number): Promise<string> {
         return jwt.sign({
@@ -97,23 +97,23 @@ export class UserService {
         });
     }
 
-    public async login(user: User) {    
+    public async login(user: User) {
         const existUser = await this.userRepository.findOne({
             where: { user_id: user.user_id }
         });
 
-        if(!existUser) {
+        if (!existUser) {
             throw new NotFoundError('존재하지 않는 아이디입니다.');
         }
         const isCorrect = await bcrypt.compare(user.password, existUser.password)
-        if(!isCorrect) {
+        if (!isCorrect) {
             throw new BadRequestError("비밀번호가 일치하지 않습니다.");
         }
         const nickname = await this.userRepository.getNickname(existUser.id);
-        return { 
+        return {
             "access_token": await this.issuanceToken(existUser.id),
             nickname
-      };
+        };
     }
 
     public async getNickname(userId: number): Promise<string> {
@@ -124,4 +124,4 @@ export class UserService {
     public async getAnswer(answer_id: number): Promise<string> {
         return await this.questionRepository.getAnswer(answer_id);
     }
-}   
+}
