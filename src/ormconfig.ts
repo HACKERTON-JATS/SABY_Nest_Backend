@@ -11,6 +11,7 @@ export const createOptions: ConnectionOptions = {
     database: config.dbName,
     synchronize: config.dbSynchronize,
     logging: config.dbLogging,
+    dateStrings: true,
     entities: [
         Admin, Chat, kidInformation, Reservation, Room, User, Question
     ]
