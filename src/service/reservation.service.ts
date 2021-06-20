@@ -28,11 +28,7 @@ export class ReservationService {
 
     public async getReservation(user_id: number): Promise<Object> {
         const time = await this.reservationRepository.getReservationTime(user_id);
-        const nickname = await this.userRepository.getNickname(user_id);
-        const information = {
-            time, nickname
-        }
-        return information;
+        return time;
     }
 
     public async isReservation(): Promise<Date[]> {
