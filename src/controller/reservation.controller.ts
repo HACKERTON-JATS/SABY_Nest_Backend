@@ -19,8 +19,8 @@ export class ReservationController {
     }
 
     public getReservation: BusinessLogic = async (req, res, next) => {
-        const time = await this.reservationService.getReservation(req.decoded.sub);
-        res.status(200).json(time);
+        const information = await this.reservationService.getReservation(req.decoded.sub);
+        res.status(200).json(information);
     }
 
     public isReservation: BusinessLogic = async (req, res, next) => {
