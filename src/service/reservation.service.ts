@@ -26,9 +26,13 @@ export class ReservationService {
         await this.kidInformationRepository.createInformation(id, kidInformation);
     }
 
-    public async getReservation(user_id: number): Promise<Date[]> {
+    public async getReservation(user_id: number): Promise<Object> {
         const time = await this.reservationRepository.getReservationTime(user_id);
-        return time;
+        const nickname = await this.userRepository.getNickname(user_id);
+        const information = {
+            time, nickname
+        }
+        return information;
     }
 
     public async isReservation(): Promise<Date[]> {
